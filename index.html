@@ -360,7 +360,8 @@
    1) CONFIGURACIÓN
    ============================================================ */
 const SHEET_ID = "1-y4LMm5G0sYiB8q9DvHNYDeEVen5JXyFLlF-usGAQjw";
-const SHEET_GID = "";          // vacío = primera pestaña
+const SHEET_NAME = "Atenciones Presenciales"; // nombre EXACTO de la pestaña a mapear
+const SHEET_GID  = "";                         // alternativa: gid numérico (tiene prioridad si se define)
 const AUTO_REFRESH_MIN = 5;    // 0 = desactivado
 
 const STATUS_COLORS = { activo:"#16a34a", inactivo:"#dc2626", otro:"#64748b" };
@@ -383,8 +384,8 @@ const FIELD_MATCHERS = {
   municipio:   h => h.includes("municipio"),
   distrito:    h => h.includes("distrito"),
   direccion:   h => h.includes("direccion"),
-  lat:         h => h.includes("latitud") || h==="lat",
-  lon:         h => h.includes("longitud") || h==="lon" || h.includes("longitu"),
+  lat:         h => h==="lat" || h.includes("latitud"),
+  lon:         h => h==="long" || h==="lon" || h.includes("longitud"),
   telefono:    h => h.includes("telefono") || h==="tel",
   coordinador: h => h.includes("coordinador"),
   responsable: h => h.includes("responsable"),
@@ -398,7 +399,8 @@ const FIELD_MATCHERS = {
    ============================================================ */
 const gvizUrl = (tqx) =>
   `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=${tqx}` +
-  (SHEET_GID ? `&gid=${SHEET_GID}` : "") + `&_=${Date.now()}`;
+  (SHEET_GID ? `&gid=${SHEET_GID}` : (SHEET_NAME ? `&sheet=${encodeURIComponent(SHEET_NAME)}` : "")) +
+  `&_=${Date.now()}`;
 
 function loadViaJSONP(){
   return new Promise((resolve,reject)=>{
